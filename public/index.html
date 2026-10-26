@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Desk — local folder agent</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0c0c0c;
+      --panel: #141414;
+      --ink: #f2efe8;
+      --muted: #8a8680;
+      --line: #2a2a2a;
+      --accent: #c9a227;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      background: radial-gradient(1200px 600px at 10% -10%, #1a1812 0%, var(--bg) 55%);
+      color: var(--ink);
+    }
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .eyebrow {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-weight: 500;
+      font-size: 42px;
+      letter-spacing: -0.02em;
+      margin: 0 0 8px;
+    }
+    .sub { color: var(--muted); margin: 0 0 28px; line-height: 1.5; }
+    .meta {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      word-break: break-all;
+    }
+    form { display: grid; gap: 12px; }
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      padding: 14px 16px;
+      font: inherit;
+      font-size: 17px;
+      line-height: 1.45;
+    }
+    textarea:focus { outline: 1px solid var(--accent); border-color: var(--accent); }
+    button {
+      justify-self: start;
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 18px;
+      background: var(--ink);
+      color: #111;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.5; cursor: wait; }
+    .answer, .sources {
+      margin-top: 28px;
+      border-top: 1px solid var(--line);
+      padding-top: 22px;
+    }
+    .answer h2, .sources h2 {
+      font-size: 13px;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      margin: 0 0 12px;
+    }
+    .answer .body { white-space: pre-wrap; line-height: 1.55; font-size: 18px; }
+    .cite {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      background: var(--panel);
+    }
+    .cite .path {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .cite .ex {
+      font-size: 14px;
+      color: var(--muted);
+      white-space: pre-wrap;
+      line-height: 1.4;
+    }
+    .err { color: #e8a0a0; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">Local · folder-grounded</div>
+    <h1>Desk</h1>
+    <p class="sub">Ask over files on this machine. Answers cite the passages they used. Nothing leaves except the Gemini call with retrieved chunks.</p>
+    <div class="meta" id="meta">Loading folder…</div>
+    <form id="form">
+      <textarea id="q" placeholder="What is our Q4 hiring priority?" required></textarea>
+      <button type="submit" id="go">Ask this folder</button>
+    </form>
+    <div class="err" id="err" hidden></div>
+    <section class="answer" id="answerSec" hidden>
+      <h2>Answer</h2>
+      <div class="body" id="answer"></div>
+    </section>
+    <section class="sources" id="srcSec" hidden>
+      <h2>Sources</h2>
+      <div id="sources"></div>
+    </section>
+  </main>
+  <script>
+    const meta = document.getElementById("meta");
+    const form = document.getElementById("form");
+    const q = document.getElementById("q");
+    const go = document.getElementById("go");
+    const err = document.getElementById("err");
+    const answerSec = document.getElementById("answerSec");
+    const srcSec = document.getElementById("srcSec");
+    const answer = document.getElementById("answer");
+    const sources = document.getElementById("sources");
+
+    fetch("/api/meta").then(r => r.json()).then(m => {
+      meta.textContent = "Folder · " + m.folder;
+    }).catch(() => { meta.textContent = "Could not load meta"; });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      err.hidden = true;
+      go.disabled = true;
+      go.textContent = "Thinking…";
+      try {
+        const res = await fetch("/api/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: q.value }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Request failed");
+        answer.textContent = data.answer;
+        answerSec.hidden = false;
+        sources.innerHTML = "";
+        (data.citations || []).forEach((c, i) => {
+          const el = document.createElement("div");
+          el.className = "cite";
+          el.innerHTML = `<div class="path">[${i + 1}] ${c.relPath}:${c.startLine}-${c.endLine}</div><div class="ex"></div>`;
+          el.querySelector(".ex").textContent = c.excerpt;
+          sources.appendChild(el);
+        });
+        srcSec.hidden = !(data.citations && data.citations.length);
+      } catch (ex) {
+        err.hidden = false;
+        err.textContent = ex.message || String(ex);
+      } finally {
+        go.disabled = false;
+        go.textContent = "Ask this folder";
+      }
+    });
+  </script>
+</body>
+</html>
