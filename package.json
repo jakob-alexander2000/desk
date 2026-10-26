@@ -1,0 +1,30 @@
+{
+  "name": "desk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Desk — local-first AI workflow over a folder of notes. Point at docs, ask grounded questions, write a report back.",
+  "type": "module",
+  "bin": {
+    "desk": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "desk": "tsx src/cli.ts",
+    "ask": "tsx src/cli.ts ask",
+    "report": "tsx src/cli.ts report",
+    "ui": "tsx src/cli.ts ui",
+    "demo": "tsx src/cli.ts ask ./sample-notes \"What are core hours?\" --write-report ./sample-notes/REPORT.md"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.0"
+  }
+}
