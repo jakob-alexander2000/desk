@@ -46,7 +46,7 @@ npm run desk -- report ./sample-notes \
 
 ## Why this exists
 
-Hiring managers can click [CiteBot](https://citebot-chi.vercel.app) (cloud RAG + verify harness) and [citebot-evals](https://github.com/jakob-alexander2000/citebot-evals). Desk is the third bet: **the same grounding idea, but the corpus is your machine.**
+Desk is local-first grounding over a folder of notes: retrieve passages from files on disk, then answer with citations. It is the same idea as cloud [CiteBot](https://citebot-chi.vercel.app) (RAG plus a verify harness) and [citebot-evals](https://github.com/jakob-alexander2000/citebot-evals), with the corpus on your machine.
 
 ## Commands
 

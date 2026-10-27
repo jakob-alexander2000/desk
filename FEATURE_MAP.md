@@ -7,7 +7,7 @@
 | Grounded ask via Gemini | ✅ | `GEMINI_API_KEY`; cites `[n]` against retrieved passages |
 | Write report markdown back to disk | ✅ | `desk report` / `--write-report` |
 | Localhost UI | ✅ | `desk ui` → `127.0.0.1:3847` |
-| Sample notes for stranger demo | ✅ | `./sample-notes` |
+| Sample notes | ✅ | `./sample-notes` for a local demo |
 | Electron / Tauri packaged app | ❌ killed | Linux CLI+UI ships; packaging theater deferred |
 | Ollama / fully offline LLM | ❌ later | Documented as optional future |
 | macOS .dmg / Windows installer | ❌ unproven | Only Node CLI + localhost UI verified on Linux |
