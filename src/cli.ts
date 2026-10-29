@@ -14,7 +14,7 @@ Usage:
 
 Env:
   GEMINI_API_KEY   required
-  GEMINI_MODEL     optional (default gemini-2.0-flash)
+  GEMINI_MODEL     optional (default gemini-3.6-flash)
 
 Examples:
   npm run desk -- ask ./sample-notes "What are core hours?"

@@ -1,10 +1,8 @@
 # Desk
 
-**Local-first AI over a folder of notes.** Point Desk at docs on disk, ask a question, get an answer grounded in those files — then optionally write a report back into the folder.
+**Ask questions about a folder of notes on your own computer.** Desk finds the passages that match, asks Gemini to answer only from them, and lists each source by file and line. It can also write the answer to a report in the same folder.
 
-A useful local/agentic desktop workflow, not another cloud chat and not a research paper.
-
-![Desk demo — folder → cited answer](./docs/demo.gif)
+![Desk demo — localhost question, then the missing-key error](./docs/demo.gif)
 
 ```
 folder of notes  →  retrieve passages  →  Gemini  →  cited answer
@@ -46,7 +44,7 @@ npm run desk -- report ./sample-notes \
 
 ## Why this exists
 
-Desk is local-first grounding over a folder of notes: retrieve passages from files on disk, then answer with citations. It is the same idea as cloud [CiteBot](https://citebot-chi.vercel.app) (RAG plus a verify harness) and [citebot-evals](https://github.com/jakob-alexander2000/citebot-evals), with the corpus on your machine.
+Desk applies CiteBot's idea to files on your own computer: find the passages first, then ask the model to answer only from them, with sources. [CiteBot](https://citebot-chi.vercel.app) also checks each claim against its sources; Desk doesn't yet. [citebot-evals](https://github.com/jakob-alexander2000/citebot-evals) is CiteBot's fixed question set.
 
 ## Commands
 
@@ -59,7 +57,7 @@ Desk is local-first grounding over a folder of notes: retrieve passages from fil
 
 ## Demo GIF note
 
-`docs/demo.gif` shows the localhost UI path: empty question field → typed question → answer with citations from `./sample-notes` (`core-hours.md`). The frames use the real UI chrome and an answer taken from that note. They illustrate the layout; they are not a new live model response.
+`docs/demo.gif` shows the localhost UI on `127.0.0.1:3847`: empty question field, `What are core hours?` typed, the button while the request is in flight, then the error Desk returns when `GEMINI_API_KEY` is unset. There is no model answer in the recording. `docs/demo-still.png` is that error frame.
 
 ## Verify
 

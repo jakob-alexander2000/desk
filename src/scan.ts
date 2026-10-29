@@ -58,6 +58,7 @@ async function walk(dir: string, root: string, out: string[]): Promise<void> {
       if (SKIP_DIRS.has(ent.name)) continue;
       await walk(full, root, out);
     } else if (ent.isFile()) {
+      if (ent.name === "REPORT.md") continue;
       const ext = path.extname(ent.name).toLowerCase();
       if (!TEXT_EXT.has(ext)) continue;
       out.push(full);
@@ -77,7 +78,7 @@ function chunkText(
   content: string,
   targetChars = 900
 ): DocChunk[] {
-  const lines = content.split(/\r?\n/);
+  const lines = content.replace(/\r?\n$/, "").split(/\r?\n/);
   const chunks: DocChunk[] = [];
   let buf: string[] = [];
   let startLine = 1;

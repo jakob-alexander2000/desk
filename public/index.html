@@ -167,7 +167,7 @@
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Request failed");
-        answer.textContent = data.answer;
+        answer.textContent = data.answer.replaceAll("**", "");
         answerSec.hidden = false;
         sources.innerHTML = "";
         (data.citations || []).forEach((c, i) => {
