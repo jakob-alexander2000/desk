@@ -60,7 +60,7 @@ Sources:
 
 ## Why this exists
 
-Desk applies CiteBot's idea to files on your own computer: find the passages first, then ask the model to answer only from them, with sources. [CiteBot](https://citebot-chi.vercel.app) also checks each claim against its sources; Desk doesn't yet. [citebot-evals](https://github.com/jakob-alexander2000/citebot-evals) is CiteBot's fixed question set.
+Desk applies CiteBot's idea to files on your own computer: find the passages first, then ask the model to answer only from them, with sources. [CiteBot](https://citebot-chi.vercel.app) also checks each claim against its sources; Desk doesn't yet. [citebot-evals](https://github.com/jakob-alexander2000/citebot-evals) is a fixed set of 18 questions for CiteBot. By default it scores 18 hand-written example answers offline, with no API key.
 
 ## Commands
 

@@ -4,7 +4,7 @@ Desk is a local-first folder agent.
 
 ## Workflow
 1. Point at a folder of notes or docs
-2. Ask a question grounded in those files
+2. Ask for an answer only from the notes in this folder
 3. Optionally write a markdown report back into the folder
 
 ## Stack
