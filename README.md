@@ -24,7 +24,7 @@ npm run desk -- ask ./sample-notes "What are core hours?"
 Expected shape (wording varies by model):
 
 ```
-Core hours are …
+Core hours are **10:00–16:00** local time …
 Sources:
   [1] core-hours.md:…
 ```
@@ -40,7 +40,7 @@ Write a report back into the folder:
 
 ```bash
 npm run desk -- report ./sample-notes \
-  -q "Summarize decisions and open questions" \
+  -q "Summarize paid time off, the team offsite, and the expense policy" \
   -o ./sample-notes/REPORT.md
 ```
 
@@ -59,7 +59,7 @@ Desk is local-first grounding over a folder of notes: retrieve passages from fil
 
 ## Demo GIF note
 
-`docs/demo.gif` shows the localhost UI path: empty → typed question → answer with citations from `./sample-notes`. The answer text is from a successful live `desk ask` against Gemini. A second live UI capture in the same session hit Gemini free-tier **429** (daily request quota); the GIF therefore uses real UI chrome + that proven CLI transcript rather than a second live model call.
+`docs/demo.gif` shows the localhost UI path: empty question field → typed question → answer with citations from `./sample-notes` (`core-hours.md`). The frames use the real UI chrome and an answer taken from that note. They illustrate the layout; they are not a new live model response.
 
 ## Verify
 
