@@ -2,7 +2,7 @@
   "name": "desk",
   "version": "0.1.0",
   "private": true,
-  "description": "Desk — local-first AI workflow over a folder of notes. Point at docs, ask grounded questions, write a report back.",
+  "description": "Desk — local-first AI workflow over a folder of notes. Point at docs, ask for answers from this folder, write a report back.",
   "type": "module",
   "bin": {
     "desk": "./dist/cli.js"

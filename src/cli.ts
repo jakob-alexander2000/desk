@@ -2,21 +2,25 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { askFolder, renderAskMarkdown } from "./ask.js";
+import { retrieve } from "./retrieve.js";
+import { loadChunks, resolveFolder } from "./scan.js";
 import { startUi } from "./serve.js";
 
 function usage(): never {
   console.log(`Desk — local-first AI over a folder of notes
 
 Usage:
+  desk search <folder> <question>
   desk ask <folder> <question> [--write-report <path>]
   desk report <folder> --question <q> --out <path>
   desk ui <folder> [--port 3847]
 
 Env:
   GEMINI_API_KEY   required
-  GEMINI_MODEL     optional (default gemini-2.0-flash)
+  GEMINI_MODEL     optional (default gemini-3.6-flash)
 
 Examples:
+  npm run desk -- search ./sample-notes "What are core hours?"
   npm run desk -- ask ./sample-notes "What are core hours?"
   npm run desk -- report ./sample-notes -q "Summarize decisions" -o ./sample-notes/REPORT.md
   npm run desk -- ui ./sample-notes
@@ -44,6 +48,24 @@ async function main() {
   if (!argv.length || argv[0] === "-h" || argv[0] === "--help") usage();
 
   const cmd = argv.shift()!;
+
+  if (cmd === "search") {
+    const folder = argv.shift();
+    const question = argv.join(" ").trim();
+    if (!folder || !question) usage();
+    const abs = await resolveFolder(folder);
+    const { chunks } = await loadChunks(abs);
+    const hits = retrieve(chunks, question, 8);
+    if (!hits.length) {
+      console.log("No matching passages.");
+      return;
+    }
+    console.log("Sources:");
+    hits.forEach((c, i) => {
+      console.log(`  [${i + 1}] ${c.relPath}:${c.startLine}-${c.endLine}`);
+    });
+    return;
+  }
 
   if (cmd === "ask") {
     const writeReport =

@@ -4,7 +4,7 @@
 |------|--------|-------|
 | Scan local folder (md/txt/code/json/yaml) | ✅ | Skips `node_modules`, `.git`, binaries; caps size/count |
 | Chunk + keyword retrieve | ✅ | Fast local ranking; no vector DB |
-| Grounded ask via Gemini | ✅ | `GEMINI_API_KEY`; cites `[n]` against retrieved passages |
+| Answers from this folder via Gemini | ✅ | `GEMINI_API_KEY`; cites `[n]` against retrieved passages |
 | Write report markdown back to disk | ✅ | `desk report` / `--write-report` |
 | Localhost UI | ✅ | `desk ui` → `127.0.0.1:3847` |
 | Sample notes | ✅ | `./sample-notes` for a local demo |
