@@ -1,0 +1,29 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
+      - name: Retrieval smoke (no model call, no API key)
+        env:
+          GEMINI_API_KEY: ""
+        run: |
+          out="$(npm run --silent desk -- search ./sample-notes "What are core hours?")"
+          echo "$out"
+          echo "$out" | grep -q '\[1\] core-hours.md:' || { echo "expected core-hours.md ranked first"; exit 1; }
