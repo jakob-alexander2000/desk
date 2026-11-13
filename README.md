@@ -80,6 +80,8 @@ npm run typecheck
 npm run desk -- search ./sample-notes "What are core hours?"
 ```
 
+GitHub Actions runs the same checks on every pull request and push to `main`: `npm ci`, typecheck, build, and the retrieval search above, which must rank `core-hours.md` first. No API key is needed.
+
 ## Feature map
 
 See [FEATURE_MAP.md](./FEATURE_MAP.md).
